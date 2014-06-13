@@ -338,7 +338,7 @@ ul li:active{
 		    var ival = 0;
 	
 		    xively.datastream.get (feedID, switchID, function ( datastream ) {
-			if (datastream["current_value"] == 0) {
+			if (datastream["current_value"] == "0") {
 				sval.datastreams[0].current_value = '1';
 				ival = 1;
 			}
