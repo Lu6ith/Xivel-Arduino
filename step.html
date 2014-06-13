@@ -8,6 +8,8 @@
 	<!--jQuery References-->
 	<script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
 	<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.17/jquery-ui.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="xivelyjs-1.0.4.min.js"></script>
+
 <!-- 	<link href="font-awesome.min.css" rel="stylesheet" type="text/css" />
 	<link href="step.css" rel="stylesheet" type="text/css" /> -->
 	<style>
@@ -192,8 +194,47 @@ ul li:active{
  font-family: Arial, Verdana, Helvetica, sans-serif;
  font-size: 14px;
 }
+
+#pinfo03 {
+ color: navy;
+ font-family: Arial, Verdana, Helvetica, sans-serif;
+ font-size: 16px;
+}
 	</style>
 	<script>
+	// Make sure the document is ready to be handled  
+	$(document).ready(function($) {  
+  
+  // Set the Xively API key (https://xively.com/users/YOUR_USERNAME/keys)  
+  xively.setKey( "Q7suOacawmwWogdpRIximl1WmsgXah5nGD2LQflDkfyFapc4" );  
+  
+  // Replace with your own values  
+  var feedID        = 1923937797,          // Feed ID  
+      datastreamID  = "home_temp1";       // Datastream ID  
+      selector      = "#pinfo03.span";   // Your element on the page  
+  
+  // Get datastream data from Xively  
+  xively.datastream.get (feedID, datastreamID, function ( datastream ) {  
+    // WARNING: This code is only executed when we get a response back from Xively,   
+    // it will likely execute after the rest your script  
+    //  
+    // NOTE: The variable "datastream" will contain all the Datastream information   
+    // as an object. The structure of Datastream objects can be found at:   
+    // https://xively.com/dev/docs/api/quick_reference/api_resource_attributes/#datastream  
+  
+    // Display the current value from the datastream  
+    $(selector).html( datastream["current_value"] );  
+  
+    // Getting realtime!   
+    // The function associated with the subscribe method will be executed   
+    // every time there is an update to the datastream  
+    xively.datastream.subscribe( feedID, datastreamID, function ( event , datastream_updated ) {  
+      // Display the current value from the updated datastream  
+      $(selector).html( datastream_updated["current_value"] );  
+    });  
+  
+  });  
+	
 	function TakePict(script, iddok)
 	{ 
 		var req = null; 
@@ -280,6 +321,7 @@ ul li:active{
 			    
 			    return xmlHttp.responseText;
 		    };		
+	});
 	</script> 
 	
 	</head>
@@ -313,6 +355,7 @@ ul li:active{
 	
 	<div id="info01"> 
 		<p id="pinfo02" align="middle">Wyzwalanie snapshota ... </p>
+		<p id="pinfo03" align="middle">Aktualna temperatura ...<span></span> </p>
 	</div>
 	
 
