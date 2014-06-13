@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+	<head>
+	<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> -->
+	<script type="text/javascript" src="date.js"></script>
+	<!--jQuery References-->
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.17/jquery-ui.min.js" type="text/javascript"></script>
+	<link href="font-awesome.min.css" rel="stylesheet" type="text/css" />
+	<link href="step.css" rel="stylesheet" type="text/css" />
+
+	<script language="JavaScript">
+	function TakePict(script, iddok)
+	{ 
+		var req = null; 
+
+		document.getElementById(iddok).innerHTML = "Czekaj ...";
+		if(window.XMLHttpRequest)
+			req = new XMLHttpRequest(); 
+		else if (window.ActiveXObject)
+			req  = new ActiveXObject(Microsoft.XMLHTTP); 
+
+		req.onreadystatechange = function()
+		{ 
+			document.getElementById(iddok).innerHTML = "Czekaj ...";
+			if(req.readyState == 4)
+			{
+				if(req.status == 200)
+				{
+					if(req.responseText == '')
+					{
+					 document.getElementById(iddok).innerHTML = "Brak odpowiedzi !!!!! ";
+					}
+					else
+					{
+					 document.getElementById(iddok).innerHTML = "... Zdjęcie zrobione ! ..." + req.responseText;
+					}
+				}	
+				else	
+				{
+					document.getElementById(iddok).style = "color: #b2045b;";				
+					document.getElementById(iddok).innerHTML = "Error:  " + req.status + " " + req.statusText;
+				}	
+			} 
+		}; 
+		req.open("GET", "/cgi-bin/" + script, true); 
+		req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); 
+		req.send(null); 
+	}
+
+
+	function update()
+			{
+			$('#pinfo02').text('Taking snapshot ...'); 
+			//location.reload();
+			$.ajax({
+				type: 'GET',
+				url: '/cgi-bin/snap.sh',
+				timeout: 20000,
+				success: function(data) {
+					//$("#camera01").html(data);
+					$('#pinfo02').text('.... done ...'); 
+					window.setTimeout(update, 10000);
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					$('#pinfo02').text('Timeout contacting server..');
+					window.setTimeout(update, 60000);
+				}
+			});
+		};
+		
+	function TakeSnap()
+			{
+			TakePict('pocv.py', 'pinfo02');
+			var now = new Date();
+			var tim0 = new Date().toString("dddd d MMMM yyyy, HH:mm:ss");
+			if (document.images) {
+				$('#camera01').fadeOut('slow');
+				document.images.camera01.src = 'img/image.png?' + now.getTime();
+				$('#camera01').fadeIn("slow");
+				$('#pinfo02').text("Snapshot z godz.: " + tim0);
+			}
+				//$('#camera01').fadeOut('slow').html("<img src='img/image.png'/>").fadeIn("slow");
+				//$('#camera01').fadeOut('slow').load("/ #pict01").fadeIn("slow");
+				//location.reload();
+			};
+		
+	</script>
+	
+	</head>
+
+	<body>
+
+	<div class="wrapper-1">
+		<ul id="nav">
+		<li><b class="icon-home"></b></li>
+		<li><b class="icon-picture"></b></li>
+		<li onclick="TakeSnap()"><b class="icon-facetime-video"></b></li>
+		<li><b class="icon-headphones"></b></li>
+		<li><b class="icon-user"></b></li>
+		</ul>
+	</div>
+
+	<div class="wrapper-2">
+		<ul id="nav">
+		<li><b class="icon-arrow-right"></b></li>
+		<li><b class="icon-arrow-down"></b></li>
+		<li><b class="icon-arrow-up"></b></li>
+		<li><b class="icon-arrow-left"></b></li>
+		</ul>
+	</div>
+	
+	<div class="wrapper-3">
+		<ul id="nav">
+		<li id="camera01"><img name="camera01" src='img/image.png' height="400" width="560"/></li>
+		</ul>
+	</div>
+	
+	<div id="info01"> 
+		<p id="pinfo02" align="middle">Wyzwalanie snapshota ... </p>
+	</div>
+	
+
+	</body>
+</html>
+
