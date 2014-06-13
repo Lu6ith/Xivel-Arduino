@@ -211,6 +211,7 @@ ul li:active{
   // Replace with your own values  
   var feedID        = 1923937797,          // Feed ID  
       datastreamID  = "home_temp1";       // Datastream ID  
+      switchID	    = "switch_ctrl";	// Switch ID
       selector      = "#pinfo03";   // Your element on the page  
   
   // Get datastream data from Xively  
@@ -293,8 +294,7 @@ ul li:active{
 			});
 		};
 		
-	function TakeSnap()
-			{
+	             function TakeSnap() {
 			TakePict('pocv.py', 'pinfo02');
 			var now = new Date();
 			var tim0 = new Date().toString("dddd d MMMM yyyy, HH:mm:ss");
@@ -307,7 +307,7 @@ ul li:active{
 				//$('#camera01').fadeOut('slow').html("<img src='img/image.png'/>").fadeIn("slow");
 				//$('#camera01').fadeOut('slow').load("/ #pict01").fadeIn("slow");
 				//location.reload();
-			};
+		    };
 		
 		    function httpGet( theUrl ){
  
@@ -315,11 +315,25 @@ ul li:active{
  
 			    xmlHttp = new XMLHttpRequest();
 			    xmlHttp.open( 'GET', theUrl, false );
-			    xmlHttp.send( null );
- 
-			    
+			    xmlHttp.send( null ); 			    
 			    return xmlHttp.responseText;
 		    };		
+
+		function toggleSwitch() {
+		    xively.datastream.get (feedID, switchID, function ( datastream ) {
+			var sval = {
+				"version":"1.0.0",
+   				"datastreams" : [ {
+				    "id" : "switch_ctrl",
+			            "current_value" : "0"
+				}]
+			};
+			if (datastream["current_value"] == '0') {sval.datastreams[0].current_value = '1'}
+			else {sval.datastreams[0].current_value = '0'};
+			xively.datastream.update (feedID, switchID, sval, function (data) {
+			});
+		    });
+		};
 	});
 	</script> 
 	
@@ -333,7 +347,7 @@ ul li:active{
 		<li><b class="icon-picture"></b></li>
 		<li onclick="TakeSnap()"><b class="icon-facetime-video"></b></li>
 		<li><b class="icon-headphones"></b></li>
-		<li><b class="icon-user"></b></li>
+		<li onclick="toggleSwitch()"><b class="icon-user"></b></li>
 		</ul>
 	</div>
 
