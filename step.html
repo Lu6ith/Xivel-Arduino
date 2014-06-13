@@ -202,6 +202,13 @@ ul li:active{
 }
 	</style>
 	<script>
+
+  // Replace with your own values  
+  var feedID        = 1923937797,          // Feed ID  
+      datastreamID  = "home_temp1",       // Datastream ID  
+      switchID      = "switch_ctrl",    // Switch ID
+      selector      = "#pinfo03";   // Your element on the page  
+  
 	// Make sure the document is ready to be handled  
 	$(document).ready(function($) {  
   
@@ -209,10 +216,10 @@ ul li:active{
   xively.setKey( "Q7suOacawmwWogdpRIximl1WmsgXah5nGD2LQflDkfyFapc4" );  
   
   // Replace with your own values  
-  var feedID        = 1923937797,          // Feed ID  
-      datastreamID  = "home_temp1",       // Datastream ID  
-      switchID	    = "switch_ctrl",	// Switch ID
-      selector      = "#pinfo03";   // Your element on the page  
+  //var feedID        = 1923937797,          // Feed ID  
+  //    datastreamID  = "home_temp1",       // Datastream ID  
+  //    switchID	    = "switch_ctrl",	// Switch ID
+  //    selector      = "#pinfo03";   // Your element on the page  
   
   // Get datastream data from Xively  
   xively.datastream.get (feedID, datastreamID, function ( datastream ) {  
