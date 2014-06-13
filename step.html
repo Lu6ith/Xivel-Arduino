@@ -328,19 +328,19 @@ ul li:active{
 		    };		
 
 		function toggleSwitch() {
+                    var sval = {
+                            "version":"1.0.0",
+                            "datastreams" : [ {
+                                "id" : "switch_ctrl",
+                                "current_value" : "0"
+                            }]
+                    };
 		    xively.datastream.get (feedID, switchID, function ( datastream ) {
-			var sval = {
-				"version":"1.0.0",
-   				"datastreams" : [ {
-				    "id" : "switch_ctrl",
-			            "current_value" : "0"
-				}]
-			};
 			if (datastream["current_value"] == '0') {sval.datastreams[0].current_value = '1'}
 			else {sval.datastreams[0].current_value = '0'};
-			xively.datastream.update (feedID, switchID, sval, function (data) {
-			});
 		    });
+       		    xively.datastream.update (feedID, switchID, sval, function (data) {
+  		    });
 		};
 	</script> 
 	
