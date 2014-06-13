@@ -224,6 +224,7 @@ ul li:active{
   
     // Display the current value from the datastream  
     $(selector).html( datastream["current_value"] );  
+  });
   
     // Getting realtime!   
     // The function associated with the subscribe method will be executed   
@@ -233,8 +234,6 @@ ul li:active{
       $(selector).html( datastream_updated["current_value"] );  
     });  
   
-  });  
-	
 	function TakePict(script, iddok)
 	{ 
 		var req = null; 
