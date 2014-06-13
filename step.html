@@ -343,7 +343,7 @@ ul li:active{
 				ival = 1;
 			}
 			else {sval.datastreams[0].current_value = '0'; ival = 0;};
-                        xively.datastream.update (feedID, switchID, { "current_value": ival}, function () {
+                        xively.datastream.update (feedID, switchID, { "current_value": ival }, function () {
                             console.log('OK!');
                         });
 		    });
