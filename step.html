@@ -207,41 +207,36 @@ ul li:active{
   var feedID        = 1923937797,          // Feed ID  
       datastreamID  = "home_temp1",       // Datastream ID  
       switchID      = "switch_ctrl",    // Switch ID
+      servoID       = "servo_ctrl",     // Servo ID
       selector      = "#pinfo03";   // Your element on the page  
   
 	// Make sure the document is ready to be handled  
 	$(document).ready(function($) {  
   
-  // Set the Xively API key (https://xively.com/users/YOUR_USERNAME/keys)  
-  xively.setKey( "Q7suOacawmwWogdpRIximl1WmsgXah5nGD2LQflDkfyFapc4" );  
+      // Set the Xively API key (https://xively.com/users/YOUR_USERNAME/keys)
+      xively.setKey( "Q7suOacawmwWogdpRIximl1WmsgXah5nGD2LQflDkfyFapc4" );
   
-  // Replace with your own values  
-  //var feedID        = 1923937797,          // Feed ID  
-  //    datastreamID  = "home_temp1",       // Datastream ID  
-  //    switchID	    = "switch_ctrl",	// Switch ID
-  //    selector      = "#pinfo03";   // Your element on the page  
+      // Get datastream data from Xively
+      xively.datastream.get (feedID, datastreamID, function ( datastream ) {
+        // WARNING: This code is only executed when we get a response back from Xively,
+        // it will likely execute after the rest your script
+        //
+        // NOTE: The variable "datastream" will contain all the Datastream information
+        // as an object. The structure of Datastream objects can be found at:
+        // https://xively.com/dev/docs/api/quick_reference/api_resource_attributes/#datastream
   
-  // Get datastream data from Xively  
-  xively.datastream.get (feedID, datastreamID, function ( datastream ) {  
-    // WARNING: This code is only executed when we get a response back from Xively,   
-    // it will likely execute after the rest your script  
-    //  
-    // NOTE: The variable "datastream" will contain all the Datastream information   
-    // as an object. The structure of Datastream objects can be found at:   
-    // https://xively.com/dev/docs/api/quick_reference/api_resource_attributes/#datastream  
+        // Display the current value from the datastream
+        $(selector).html( datastream["current_value"] );
+      });
   
-    // Display the current value from the datastream  
-    $(selector).html( datastream["current_value"] );  
-  });
-  
-    // Getting realtime!   
-    // The function associated with the subscribe method will be executed   
-    // every time there is an update to the datastream  
-    xively.datastream.subscribe( feedID, datastreamID, function ( event , datastream_updated ) {  
-      // Display the current value from the updated datastream  
-      $(selector).html( datastream_updated["current_value"] );  
-    });  
-  });
+      // Getting realtime!
+      // The function associated with the subscribe method will be executed
+      // every time there is an update to the datastream
+      xively.datastream.subscribe( feedID, datastreamID, function ( event , datastream_updated ) {
+          // Display the current value from the updated datastream
+          $(selector).html( datastream_updated["current_value"] );
+      });
+    });
   
 	function TakePict(script, iddok)
 	{ 
@@ -302,7 +297,7 @@ ul li:active{
 			});
 		};
 		
-	             function TakeSnap() {
+	function TakeSnap() {
 			TakePict('pocv.py', 'pinfo02');
 			var now = new Date();
 			var tim0 = new Date().toString("dddd d MMMM yyyy, HH:mm:ss");
@@ -315,39 +310,44 @@ ul li:active{
 				//$('#camera01').fadeOut('slow').html("<img src='img/image.png'/>").fadeIn("slow");
 				//$('#camera01').fadeOut('slow').load("/ #pict01").fadeIn("slow");
 				//location.reload();
-		    };
+	};
 		
-		    function httpGet( theUrl ){
+	function httpGet( theUrl ){
  
-			    var xmlHttp = null;
- 
-			    xmlHttp = new XMLHttpRequest();
-			    xmlHttp.open( 'GET', theUrl, false );
-			    xmlHttp.send( null ); 			    
-			    return xmlHttp.responseText;
-		    };		
+	    var xmlHttp = null;
+ 	    xmlHttp = new XMLHttpRequest();
+	    xmlHttp.open( 'GET', theUrl, false );
+	    xmlHttp.send( null );
+	    return xmlHttp.responseText;
+	};
 
-		function toggleSwitch() {
-                    var sval = {
-                            "version":"1.0.0",
-                            "datastreams" : [ {
-                                "id" : "switch_ctrl",
-                                "current_value" : "0"
-                            }]
-                    };
-		    var ival = 0;
+	function toggleSwitch() {
+        var sval = {
+            "version":"1.0.0",
+            "datastreams" : [ {
+                 "id" : "switch_ctrl",
+                 "current_value" : "0"
+                }]
+            };
+        var ival = 0;
 	
-		    xively.datastream.get (feedID, switchID, function ( datastream ) {
-			if (datastream["current_value"] == "0") {
-				sval.datastreams[0].current_value = '1';
-				ival = 1;
-			}
-			else {sval.datastreams[0].current_value = '0'; ival = 0;};
-                        xively.datastream.update (feedID, switchID, { "current_value": ival }, function () {
-                            console.log('OK!');
-                        });
-		    });
-		};
+		xively.datastream.get (feedID, switchID, function ( datastream ) {
+		    if (datastream["current_value"] == "0") {
+			    sval.datastreams[0].current_value = '1';
+			    ival = 1;
+		    }
+		    else {sval.datastreams[0].current_value = '0'; ival = 0;};
+            xively.datastream.update (feedID, switchID, { "current_value": ival }, function () {
+                console.log('OK!');
+            });
+	    });
+    };
+
+    function ctrlServo ( cntrl ) {
+        xively.datastream.update (feedID, servoID, { "current_value": cntrl }, function () {
+            console.log('OK!');
+        });
+    }
 	</script> 
 	
 	</head>
@@ -366,11 +366,15 @@ ul li:active{
 
 	<div class="wrapper-2">
 		<ul id="nav">
-		<li onclick="httpGet('http://192.168.0.20:8080/?serverfunction=ledSwitch&value=1&led=5')"><b class="icon-arrow-right"></b></li>
+		<!--<li onclick="httpGet('http://192.168.0.20:8080/?serverfunction=ledSwitch&value=1&led=5')"><b class="icon-arrow-right"></b></li>
 		<li onclick="httpGet('http://192.168.0.20:8080/?serverfunction=ledSwitch&value=1&led=4')"><b class="icon-arrow-down"></b></li>
 		<li onclick="httpGet('http://192.168.0.20:8080/?serverfunction=ledSwitch&value=0&led=4')"><b class="icon-arrow-up"></b></li>
-		<li onclick="httpGet('http://192.168.0.20:8080/?serverfunction=ledSwitch&value=0&led=5')"><b class="icon-arrow-left"></b></li>
-		</ul>
+		<li onclick="httpGet('http://192.168.0.20:8080/?serverfunction=ledSwitch&value=0&led=5')"><b class="icon-arrow-left"></b></li>-->
+            <li onclick="ctrlServo('!R10*')"><b class="icon-arrow-right"></b></li>
+            <li onclick="ctrlServo('!D10*')"><b class="icon-arrow-down"></b></li>
+            <li onclick="ctrlServo('!U10*')"><b class="icon-arrow-up"></b></li>
+            <li onclick="ctrlServo('!L10*')"><b class="icon-arrow-left"></b></li>
+        </ul>
 	</div>
 	
 	<div class="wrapper-3">
