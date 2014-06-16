@@ -229,7 +229,19 @@ ul li:active{
         // https://xively.com/dev/docs/api/quick_reference/api_resource_attributes/#datastream
   
         // Display the current value from the datastream
-        $(selector).html( datastream["current_value"] );
+        $(selector).html( "Aktualna temperatura - <span>" + datastream_updated["current_value"] + "</span>" );
+      });
+      
+      xively.datastream.get (feedID, datastreamID1, function ( datastream ) {
+        // WARNING: This code is only executed when we get a response back from Xively,
+        // it will likely execute after the rest your script
+        //
+        // NOTE: The variable "datastream" will contain all the Datastream information
+        // as an object. The structure of Datastream objects can be found at:
+        // https://xively.com/dev/docs/api/quick_reference/api_resource_attributes/#datastream
+  
+        // Display the current value from the datastream
+        $(selector1).html( "Aktualne ciśnienie - <span>" + datastream_updated["current_value"] + "</span>" );
       });
   
       // Getting realtime!
@@ -237,12 +249,12 @@ ul li:active{
       // every time there is an update to the datastream
       xively.datastream.subscribe( feedID, datastreamID, function ( event , datastream_updated ) {
           // Display the current value from the updated datastream
-          $(selector).html( "Aktualna temp. - <span>" + datastream_updated["current_value"] + "</span>" );
+          $(selector).html( "Aktualna temperatura - <span>" + datastream_updated["current_value"] + "</span>" );
       });
 
       xively.datastream.subscribe( feedID, datastreamID1, function ( event , datastream_updated ) {
           // Display the current value from the updated datastream
-          $(selector1).html( "Aktualne ciśn. - <span>" + datastream_updated["current_value"] + "</span>" );
+          $(selector1).html( "Aktualne ciśnienie - <span>" + datastream_updated["current_value"] + "</span>" );
       });
 
     });
