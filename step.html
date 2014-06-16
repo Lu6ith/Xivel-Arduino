@@ -195,7 +195,8 @@ ul li:active{
  font-size: 14px;
 }
 
-#pinfo03 {
+#pinfo03,
+#pinfo04 {
  color: lightsteelblue;
  font-family: Arial, Verdana, Helvetica, sans-serif;
  font-size: 16px;
@@ -205,10 +206,12 @@ ul li:active{
 
   // Replace with your own values  
   var feedID        = 1923937797,          // Feed ID  
-      datastreamID  = "home_temp1",       // Datastream ID  
+      datastreamID  = "home_temp1",       // Datastream ID 
+      datastreamID1 = "home_press1",
       switchID      = "switch_ctrl",    // Switch ID
       servoID       = "servo_ctrl",     // Servo ID
       selector      = "#pinfo03";   // Your element on the page  
+      selector1      = "#pinfo04";   // Your element on the page  
   
 	// Make sure the document is ready to be handled  
 	$(document).ready(function($) {  
@@ -234,8 +237,14 @@ ul li:active{
       // every time there is an update to the datastream
       xively.datastream.subscribe( feedID, datastreamID, function ( event , datastream_updated ) {
           // Display the current value from the updated datastream
-          $(selector).html( datastream_updated["current_value"] );
+          $(selector).html( "Aktualna temp. - <span>" + datastream_updated["current_value"] + "</span>" );
       });
+
+      xively.datastream.subscribe( feedID, datastreamID1, function ( event , datastream_updated ) {
+          // Display the current value from the updated datastream
+          $(selector1).html( "Aktualne ciśn. - <span>" + datastream_updated["current_value"] + "</span>" );
+      });
+
     });
   
 	function TakePict(script, iddok)
@@ -386,6 +395,7 @@ ul li:active{
 	<div id="info01"> 
 		<p id="pinfo02" align="middle">Wyzwalanie snapshota ... </p>
 		<p id="pinfo03" align="middle">Aktualna temperatura ...<span></span> </p>
+		<p id="pinfo04" align="middle">Aktualne ciśnienie ...<span></span> </p>
 	</div>
 	
 
